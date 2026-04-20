@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joint Inventorship Self-Assessment</title>
+  <meta name="description" content="A guided interview for researchers and academics to assess whether their contribution may support a joint inventorship claim.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-text-primary: #2C2C2A;
+      --color-text-secondary: #5F5E5A;
+      --color-text-tertiary: #888780;
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #F1EFE8;
+      --color-border-tertiary: rgba(44,44,42,0.15);
+      --color-border-secondary: rgba(44,44,42,0.3);
+      --border-radius-md: 8px;
+      --border-radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-text-primary: #E8E6DE;
+        --color-text-secondary: #B4B2A9;
+        --color-text-tertiary: #888780;
+        --color-background-primary: #1C1C1A;
+        --color-background-secondary: #2C2C2A;
+        --color-border-tertiary: rgba(232,230,222,0.15);
+        --color-border-secondary: rgba(232,230,222,0.3);
+      }
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      line-height: 1.6;
+    }
+
+    #app-container {
+      max-width: 620px;
+      margin: 0 auto;
+      background: var(--color-background-primary);
+      border-radius: var(--border-radius-lg);
+      padding: 2rem 1.5rem;
+      border: 0.5px solid var(--color-border-tertiary);
+    }
+
+    .app-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+    .app-subtitle { font-size: 13px; color: var(--color-text-tertiary); margin-bottom: 1.5rem; }
+
+    .body-text { font-size: 14px; color: var(--color-text-primary); line-height: 1.7; margin-bottom: 1rem; }
+    .body-text-muted { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1rem; }
+
+    .section-label {
+      font-size: 11px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--color-text-tertiary);
+      margin: 1.5rem 0 6px;
+    }
+
+    .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.25rem 0; }
+
+    .disclaimer-box {
+      background: #FAEEDA; border: 0.5px solid #EF9F27;
+      border-radius: var(--border-radius-lg); padding: 1.25rem; margin: 1.5rem 0;
+    }
+    .disclaimer-title { font-size: 13px; font-weight: 500; color: #412402; margin-bottom: 8px; }
+    .disclaimer-body { font-size: 13px; color: #633806; line-height: 1.6; }
+    .disclaimer-body div { margin-bottom: 8px; }
+    .disclaimer-body div:last-child { margin-bottom: 0; }
+
+    .ack-row { display: flex; align-items: flex-start; gap: 10px; margin: 1.25rem 0; cursor: pointer; user-select: none; }
+    .ack-box {
+      width: 18px; height: 18px; flex-shrink: 0;
+      border: 1.5px solid var(--color-border-secondary); border-radius: 4px;
+      margin-top: 2px; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .ack-box.checked { background: #534AB7; border-color: #534AB7; }
+    .ack-check { display: none; width: 10px; height: 10px; }
+    .ack-box.checked .ack-check { display: block; }
+    .ack-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+    .begin-btn {
+      display: block; width: 100%; padding: 16px;
+      background: #534AB7; border: none; border-radius: var(--border-radius-lg);
+      font-size: 16px; font-weight: 500; color: #fff; cursor: pointer;
+      text-align: center; margin-top: 1rem; opacity: 0.35;
+      transition: opacity 0.2s, background 0.2s;
+    }
+    .begin-btn.enabled { opacity: 1; }
+    .begin-btn.enabled:hover { background: #3C3489; }
+
+    .tooltip-anchor {
+      color: #534AB7; text-decoration: underline; text-decoration-style: dotted;
+      cursor: pointer; position: relative; display: inline;
+    }
+    .tooltip-bubble {
+      display: none; position: absolute; left: 0; top: 24px; width: 280px;
+      background: var(--color-background-primary);
+      border: 0.5px solid var(--color-border-secondary);
+      border-radius: var(--border-radius-lg); padding: 12px 14px;
+      font-size: 12px; color: var(--color-text-secondary); line-height: 1.6;
+      z-index: 10; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .tooltip-bubble.visible { display: block; }
+    .tooltip-title { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+
+    .progress { display: flex; gap: 4px; margin-bottom: 24px; }
+    .progress-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-border-secondary); }
+    .progress-dot.done { background: #534AB7; }
+    .progress-dot.active { background: #7F77DD; }
+
+    .back-btn {
+      font-size: 12px; color: var(--color-text-tertiary);
+      background: none; border: none; cursor: pointer; padding: 0;
+      margin-bottom: 16px; display: none;
+    }
+    .back-btn:hover { color: var(--color-text-secondary); }
+
+    .q-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin-bottom: 8px; }
+    .q-text { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; line-height: 1.5; }
+    .q-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 20px; line-height: 1.5; }
+
+    .opt-btn {
+      display: block; width: 100%; text-align: left;
+      padding: 12px 16px; margin-bottom: 8px;
+      background: var(--color-background-primary);
+      border: 0.5px solid var(--color-border-secondary);
+      border-radius: var(--border-radius-md);
+      font-size: 14px; color: var(--color-text-primary);
+      cursor: pointer; line-height: 1.4;
+      transition: background 0.15s;
+    }
+    .opt-btn:hover { background: var(--color-background-secondary); }
+
+    .stop-card { background: #FCEBEB; border: 0.5px solid #F09595; border-radius: var(--border-radius-lg); padding: 1.25rem; margin-top: 8px; }
+    .stop-title { font-size: 15px; font-weight: 500; color: #501313; margin-bottom: 6px; }
+    .stop-body { font-size: 13px; color: #791F1F; line-height: 1.5; }
+
+    .continue-card { background: #E1F5EE; border: 0.5px solid #5DCAA5; border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+    .continue-title { font-size: 15px; font-weight: 500; color: #04342C; margin-bottom: 6px; }
+    .continue-body { font-size: 13px; color: #085041; line-height: 1.5; }
+
+    .flag-card { background: #FAEEDA; border: 0.5px solid #EF9F27; border-radius: var(--border-radius-lg); padding: 1.25rem; margin-top: 8px; }
+    .flag-title { font-size: 15px; font-weight: 500; color: #412402; margin-bottom: 6px; }
+    .flag-body { font-size: 13px; color: #633806; line-height: 1.5; }
+
+    .action-btn {
+      margin-top: 12px; padding: 10px 20px;
+      background: var(--color-background-primary);
+      border: 0.5px solid var(--color-border-secondary);
+      border-radius: var(--border-radius-md);
+      font-size: 14px; color: var(--color-text-primary);
+      cursor: pointer; display: inline-block;
+    }
+    .action-btn:hover { background: var(--color-background-secondary); }
+    .action-btn.primary { background: #EEEDFE; border-color: #AFA9EC; color: #26215C; }
+    .action-btn.primary:hover { background: #CECBF6; }
+    .action-btn.print-btn { background: #E1F5EE; border-color: #5DCAA5; color: #04342C; }
+    .action-btn.print-btn:hover { background: #9FE1CB; }
+
+    .nav-row { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+
+    .progress-label { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 20px; }
+
+    .doc-item {
+      display: flex; gap: 10px; padding: 10px 14px; margin-bottom: 6px;
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+      font-size: 13px; color: var(--color-text-primary); line-height: 1.5;
+    }
+    .doc-bullet { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; background: #1D9E75; margin-top: 6px; }
+
+    .link-block { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px 16px; margin-bottom: 10px; }
+    .link-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+    .link-url { font-size: 12px; color: var(--color-text-tertiary); }
+
+    .tip-block {
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md); padding: 14px 16px;
+      margin-bottom: 10px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      #app-container { display: none !important; }
+      #print-summary { display: block !important; }
+    }
+
+    #print-summary {
+      display: none;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      max-width: 700px; margin: 0 auto; padding: 40px; color: #2C2C2A;
+    }
+    #print-summary h1 { font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    #print-summary .print-subtitle { font-size: 12px; color: #888780; margin-bottom: 24px; }
+    #print-summary .print-outcome { padding: 14px 18px; border-radius: 8px; margin-bottom: 24px; }
+    #print-summary .print-outcome.met { background: #E1F5EE; border: 1px solid #5DCAA5; }
+    #print-summary .print-outcome.not-met { background: #FCEBEB; border: 1px solid #F09595; }
+    #print-summary .print-outcome.ambiguous { background: #FAEEDA; border: 1px solid #EF9F27; }
+    #print-summary .print-outcome h2 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 6px; }
+    #print-summary .print-outcome p { font-size: 12px; margin: 0; line-height: 1.6; }
+    #print-summary .print-section { margin-bottom: 20px; }
+    #print-summary .print-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #888780; margin-bottom: 8px; border-bottom: 0.5px solid #D3D1C7; padding-bottom: 4px; }
+    #print-summary .print-qa { margin-bottom: 10px; }
+    #print-summary .print-q { font-size: 12px; font-weight: 500; color: #2C2C2A; margin-bottom: 2px; }
+    #print-summary .print-a { font-size: 12px; color: #444441; padding-left: 12px; border-left: 2px solid #AFA9EC; }
+    #print-summary .print-evidence-item { font-size: 12px; color: #444441; padding: 6px 0; border-bottom: 0.5px solid #F1EFE8; }
+    #print-summary .print-disclaimer { font-size: 11px; color: #888780; margin-top: 32px; padding-top: 12px; border-top: 0.5px solid #D3D1C7; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<div id="app-container">
+
+  <div id="opening" style="display:block">
+    <div class="app-title">Joint inventorship self-assessment</div>
+    <div class="app-subtitle">A guided interview for researchers and academics</div>
+    <div class="section-label">Purpose</div>
+    <div class="body-text">This tool helps you work through whether your contribution to a research project may support a claim for joint inventorship on a patent. It asks a series of factual questions about the nature, origin, and timing of your contribution, and guides you toward a preliminary assessment of whether the legal threshold has been met.</div>
+    <div class="body-text-muted">The threshold this interview focuses on is <span class="tooltip-anchor" id="conception-anchor" onclick="toggleTooltip()">conception of the idea for an invention<div class="tooltip-bubble" id="conception-tooltip"><div class="tooltip-title">What is conception?</div>Conception is the point at which someone has a clear and specific idea of how an invention would work — not just a goal or direction, but an actual solution. In joint inventorship, you do not need to have come up with the entire invention yourself. Contributing a specific idea to even one part of the invention can be enough. Conception is the starting point for any inventorship claim and is the main focus of this interview.</div></span> — the foundational requirement that determines whether a person can be considered an inventor at all.</div>
+    <div class="body-text-muted">It is worth knowing that being named an inventor on a patent is different from being an author on a paper. Academic authorship can reflect many kinds of contributions — supervision, guidance, data collection, writing. Patent inventorship is a narrower legal standard that focuses specifically on who contributed the ideas that make the invention protectable. The two do not always overlap.</div>
+    <hr class="divider">
+    <div class="section-label">Who this is for</div>
+    <div class="body-text-muted">Graduate students, postdoctoral researchers, faculty, and other academics who contributed to a research project and believe they may have a claim to joint inventorship — whether or not a patent has been filed yet. You do not need legal knowledge to use this tool. The questions are framed around things you experienced and can describe in your own words.</div>
+    <hr class="divider">
+    <div class="section-label">What it will ask</div>
+    <div class="body-text-muted">Questions about what kind of contribution you made, when you made it, where the idea came from, and how it relates to the invention. Most people complete the interview in five to ten minutes, depending on how many follow-up questions apply to their situation. You can go back at any point to revise a response.</div>
+    <div class="section-label">What it will not assess</div>
+    <div class="body-text-muted">This interview only addresses the threshold question of conception. A patent attorney will assess everything else necessary to evaluate the full merits of your claim.</div>
+    <hr class="divider">
+    <div class="disclaimer-box">
+      <div class="disclaimer-title">Important — please read before proceeding</div>
+      <div class="disclaimer-body">
+        <div>This tool does not constitute legal advice and does not create an attorney-client relationship. It is designed to help you organize your thinking before consulting a professional — not to replace that consultation.</div>
+        <div>If you are affiliated with a university or research institution, your institution may have IP policies that affect your rights, including obligations to disclose and assign inventions. This tool does not account for those policies. You should consult your institution's technology transfer office or an attorney before taking any action.</div>
+        <div>The output of this interview is not a legal determination. Only a qualified patent attorney can assess the full merits of a joint inventorship claim.</div>
+      </div>
+    </div>
+    <div class="ack-row" onclick="toggleAck()">
+      <div class="ack-box" id="ack-box">
+        <svg class="ack-check" viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="ack-text">I understand that this tool does not provide legal advice, does not replace consultation with a patent attorney, and that my institution's IP policies may affect my rights independently of this assessment.</div>
+    </div>
+    <button class="begin-btn" id="begin-btn" onclick="startInterview()" disabled>Begin the interview</button>
+  </div>
+
+  <div id="interview" style="display:none">
+    <div id="progress-bar" class="progress"></div>
+    <button class="back-btn" id="back-btn" onclick="goBack()">← Back</button>
+    <div id="question-area"></div>
+  </div>
+
+  <div id="conclusion" style="display:none">
+    <button class="back-btn" id="conclusion-back-btn" onclick="goBackFromConclusion()" style="display:none">← Back</button>
+    <div id="conclusion-area"></div>
+  </div>
+
+</div>
+
+<div id="print-summary"></div>
+
+<script>
+let acknowledged = false;
+let tooltipOpen = false;
+const history = [];
+let current = 'A';
+let conclusionIsRtp = false;
+const TOTAL_DOTS = 6;
+const answerLog = [];
+
+const qLabels = {
+  A: 'What best describes your contribution?',
+  A_FU1: 'Did you describe a specific solution alongside the problem?',
+  A_FU2: 'Did you suggest the solution at the same time as the problem?',
+  A_RTP: 'Did you come up with a specific new idea during building or testing?',
+  B: 'Could you describe your idea in specific terms?',
+  B_UNSURE: 'Which best matches your contribution?',
+  B_UNSURE_SUBJ: 'Would the invention be different without your contribution?',
+  B_RTP: 'Could you describe that specific new idea in concrete terms?',
+  B_UNSURE_RTP: 'Which better describes what happened during building or testing?',
+  C: 'Where did this specific idea come from?',
+  C_FU: 'How specific was the direction you were given?',
+  C_RTP: 'Where did this specific new idea come from?',
+  C_RTP_FU: 'How specific was the direction you were given during building or testing?',
+  E: 'What was the state of the project when you contributed?',
+  G: 'Did the team\'s understanding of what they were building shift after your contribution?',
+  G_UNSURE: 'Did anyone rethink or redesign after your contribution?',
+};
+
+function logAnswer(screenId, answerText) {
+  const label = qLabels[screenId];
+  if (label) answerLog.push({ q: label, a: answerText });
+}
+
+function toggleTooltip() {
+  const tip = document.getElementById('conception-tooltip');
+  tooltipOpen = !tooltipOpen;
+  tip.classList.toggle('visible', tooltipOpen);
+}
+document.addEventListener('click', function(e) {
+  const anchor = document.getElementById('conception-anchor');
+  if (anchor && !anchor.contains(e.target)) {
+    const tip = document.getElementById('conception-tooltip');
+    if (tip) { tip.classList.remove('visible'); tooltipOpen = false; }
+  }
+});
+
+function toggleAck() {
+  acknowledged = !acknowledged;
+  document.getElementById('ack-box').classList.toggle('checked', acknowledged);
+  const btn = document.getElementById('begin-btn');
+  btn.classList.toggle('enabled', acknowledged);
+  btn.disabled = !acknowledged;
+}
+
+function startInterview() {
+  if (!acknowledged) return;
+  document.getElementById('opening').style.display = 'none';
+  document.getElementById('interview').style.display = 'block';
+  render('A');
+}
+
+const screens = {
+  A: { progress:1, label:'Type of contribution', q:'Think about what you actually contributed to this project. Which of these best describes it?', sub:'Choose the option that most closely matches your role.', type:'options', options:[
+    {text:'I performed experiments, ran tests, or collected data that others used', next:'STOP_A1'},
+    {text:'I provided technical skills, equipment, or materials that the project needed', next:'STOP_A2'},
+    {text:'I came up with an idea about how the invention should work', next:'B'},
+    {text:'I suggested a problem worth solving or a goal worth pursuing', next:'A_FU1'},
+    {text:'I contributed during the building or testing phase of the invention', next:'A_RTP'},
+  ]},
+  STOP_A1:{type:'stop',title:'Conception threshold not met',body:'Performing experiments or collecting data — even skilled and essential work — is not a contribution to conception. Inventorship requires contributing a specific idea about how the invention works, not the labor of testing or building it.'},
+  STOP_A2:{type:'stop',title:'Conception threshold not met',body:'Providing technical skills, equipment, or materials is a contribution to the project but not to conception of the invention. Inventorship requires contributing a specific idea about how the invention works.'},
+  A_FU1:{progress:1,label:'Problem suggestion',q:'When you suggested this problem or goal, did you also describe a specific way to solve it — or did you leave the solution open for others to figure out?',sub:null,type:'options',options:[
+    {text:'I described a specific solution alongside the problem',next:'A_FU2'},
+    {text:'I identified the problem and left the solution to others',next:'STOP_A_FU1'},
+  ]},
+  STOP_A_FU1:{type:'stop',title:'Conception threshold not met',body:'Identifying a problem worth solving — even a valuable and insightful one — is a research goal, not a conception. Patent law does not reward the identification of the right problem with inventorship. Conception requires contributing the specific technical solution, not the motivation to find one.'},
+  A_FU2:{progress:1,label:'Timing of the solution',q:'Did you suggest the solution at the same time as the problem — or did the specific approach emerge through later discussion, experimentation, or someone\'s input?',sub:null,type:'options',options:[
+    {text:'Same time — the specific solution was part of my original suggestion',next:'B'},
+    {text:'It developed later or through others\' input',next:'STOP_A_FU2'},
+  ]},
+  STOP_A_FU2:{type:'stop',title:'Conception threshold not met',body:'If the specific solution emerged through later work or someone else\'s input, your contribution was a research goal that motivated others to conceive the invention — not a conception in its own right. The inventive moment happened downstream of your suggestion.'},
+  A_RTP:{progress:1,label:'Contribution during building or testing',q:'During that building or testing process, did you come up with a specific new idea that changed or added to what the invention actually is — not just how to build it, but what it became?',sub:null,type:'options',options:[
+    {text:'Yes — my idea changed or added to what the invention actually is',next:'B_RTP'},
+    {text:'No — my work was about building, optimizing, or validating what was already designed',next:'STOP_RTP'},
+  ]},
+  STOP_RTP:{type:'stop',title:'Conception threshold not met',body:'Contributing to building, optimizing, or validating an already-designed invention is reduction to practice — valuable work, but not conception. Inventorship requires that you contributed a specific idea to what the invention is, not just how it was constructed or proven.'},
+  B_RTP:{progress:2,label:'Specificity of your idea',q:'Could you describe that specific new idea in concrete terms — the actual mechanism, method, or design element you contributed?',sub:'Not just the category of approach — precisely what the idea was.',type:'options',options:[
+    {text:'Yes — I can describe it specifically and concretely',next:'C_RTP'},
+    {text:'No — I can only describe it in general terms',next:'STOP_B_RTP_GENERAL'},
+    {text:'I\'m not sure',next:'B_UNSURE_RTP'},
+  ]},
+  B_UNSURE_RTP:{progress:2,label:'Specificity check',q:'Think about the moment you came up with this idea during the building or testing process. Which of these better describes what happened?',sub:'This is one of the less common paths to inventorship — take a moment with this question.',type:'options',options:[
+    {text:'I was working through how to build or test something already designed, and I found a better or more efficient way to do it',next:'STOP_B_RTP'},
+    {text:'I was working through how to build or test something, and in doing so I realized the invention itself needed to be different — I came up with a new element or mechanism that became part of what the invention actually is',next:'C_RTP'},
+  ]},
+  STOP_B_RTP:{type:'stop',title:'Conception threshold not met',body:'Finding a better or more efficient way to build or test something that was already designed is skilled reduction to practice work — but it is not conception. The inventive idea already existed before your contribution. What you improved was how the invention was constructed or demonstrated, not what the invention is. Patent law recognizes the value of that work but does not treat it as a conceiving act.'},
+  STOP_B_RTP_GENERAL:{type:'stop',title:'Conception threshold not met',body:'A general or vague idea does not reach the level of specificity that conception requires, even when it arose during reduction to practice. The contribution needs to be specific enough that someone skilled in the field could identify and act on it as a distinct inventive element.'},
+  C_RTP:{progress:3,label:'Origin of your idea',q:'Thinking about where this specific new idea came from — which best describes your role?',sub:null,type:'options',options:[
+    {text:'I originated this idea independently during the building or testing process',next:'CONTINUE_RTP'},
+    {text:'I was told by someone else what the solution needed to be and I implemented it',next:'STOP_C_INSTRUCTIONS'},
+    {text:'I was directing or managing the people who actually came up with this specific idea',next:'STOP_C_SUPERVISING'},
+    {text:'Someone gave me a direction during the build process and I developed the specific idea from it',next:'C_RTP_FU'},
+  ]},
+  C_RTP_FU:{progress:3,label:'Specificity of direction received',q:'Think about the direction or instruction you were given during building or testing. How specific was it?',sub:null,type:'options',options:[
+    {text:'It pointed me toward a problem within the build process — the specific new idea was something I worked out myself',next:'CONTINUE_RTP'},
+    {text:'It already described the specific solution in enough detail that I could have implemented it without figuring out the mechanism myself',next:'STOP_C_FU'},
+  ]},
+  CONTINUE_RTP:{type:'continue_rtp'},
+  B:{progress:2,label:'Specificity of your idea',q:'Could you describe your idea in specific terms — not just "we should try approach X" but how approach X would actually work?',sub:'Think about whether you could write down the mechanism, method, or design in concrete detail.',type:'options',options:[
+    {text:'Yes — I can describe it in specific, concrete terms',next:'C'},
+    {text:'No — I can only describe it in general terms',next:'STOP_B'},
+    {text:'I\'m not sure',next:'B_UNSURE'},
+  ]},
+  B_UNSURE:{progress:2,label:'Specificity and subject matter check',q:'Which of these better matches your contribution?',sub:null,type:'options',options:[
+    {text:'A suggestion of how the invention should work — pointing toward a type of solution without specifying the exact mechanism',next:'STOP_B'},
+    {text:'A specific technical idea of how the invention could work — describing the actual mechanism precisely enough that someone could act on it',next:'B_UNSURE_SUBJ'},
+    {text:'A specific idea about how to test, measure, or prove something that was already designed',next:'STOP_B_SUBJ'},
+  ]},
+  B_UNSURE_SUBJ:{progress:2,label:'Subject matter check',q:'If you removed your contribution from the invention entirely, would the invention be different — or would it just be harder to prove that it works?',sub:null,type:'options',options:[
+    {text:'The invention would be different — my contribution changed what it is',next:'C'},
+    {text:'It would just be harder to prove — my contribution helped demonstrate it works',next:'STOP_B_SUBJ'},
+  ]},
+  STOP_B:{type:'stop',title:'Conception threshold not met',body:'A general or directional idea does not reach the level of specificity that conception requires. Suggesting a category of approach or research direction — even an insightful one — is not the same as conceiving the specific technical solution. Inventorship requires the latter.'},
+  STOP_B_SUBJ:{type:'stop',title:'Conception threshold not met',body:'A contribution to experimental methodology — testing, measuring, or characterizing an invention — is not a contribution to conception. Even highly skilled experimental design does not qualify if the inventive concept was already formed before that work began.'},
+  C:{progress:3,label:'Origin of your idea',q:'Thinking about where this specific idea came from — which best describes your role?',sub:null,type:'options',options:[
+    {text:'I originated this idea independently — it was my own mental act',next:'E'},
+    {text:'I was given the specific solution by someone else and implemented it',next:'STOP_C_INSTRUCTIONS'},
+    {text:'I directed or managed others who came up with the specific technical solution',next:'STOP_C_SUPERVISING'},
+    {text:'Someone else proposed a direction and I developed the specific mechanism from it',next:'C_FU'},
+  ]},
+  STOP_C_INSTRUCTIONS:{type:'stop',title:'Conception threshold not met',body:'If the specific technical solution was given to you by someone else and your role was to implement it, the conception happened with the person who provided that solution — not with you. Carrying out a pre-specified solution, even skillfully and independently, is execution rather than conception.'},
+  STOP_C_SUPERVISING:{type:'stop',title:'Conception threshold not met',body:'Directing or managing others who generate the specific technical ideas is an administrative or managerial contribution — not a contribution to conception. Inventorship requires personally contributing an idea, not overseeing the people who do.'},
+  C_FU:{progress:3,label:'Specificity of direction received',q:'Think about the direction or instruction you were given. How specific was it?',sub:null,type:'options',options:[
+    {text:'It pointed me toward a problem or general approach — the specific technical solution was something I worked out myself',next:'E'},
+    {text:'It described a specific technical solution in enough detail that I could have implemented it without figuring out the mechanism myself',next:'STOP_C_FU'},
+  ]},
+  STOP_C_FU:{type:'stop',title:'Conception threshold not met',body:'If the direction you received already described the specific technical solution in enough detail to implement it, the conception happened with the person who gave that direction — not with you. Carrying out a pre-specified solution, even skillfully and independently, is execution rather than conception.'},
+  E:{progress:4,label:'Project state and timing',q:'When you made this contribution, what best describes the state of the project?',sub:'Think about what the team was working on and what had already been decided.',type:'options',options:[
+    {text:'The team was still debating which approach or method to use',next:'G'},
+    {text:'A general direction existed but no specific technical solution had been proposed yet',next:'G'},
+    {text:'A specific solution had already been proposed by someone else, tested or not',next:'STOP_E'},
+    {text:'The invention was already designed and the team was building, testing, or refining it',next:'STOP_E'},
+  ]},
+  STOP_E:{type:'stop',title:'Timing — conception likely already complete',body:'Based on the project\'s state when you contributed, conception appears to have been complete before your contribution. Once a specific technical solution has been proposed by someone else, conception is done — whether or not that solution had been tested yet. Contributions made after that point are generally not counted toward inventorship.'},
+  G:{progress:5,label:'Effect of your contribution',q:'After you made your contribution, did the team\'s understanding of what they were building stay the same — or shift?',sub:'Think about whether your contribution changed the direction or definition of the invention.',type:'options',options:[
+    {text:'It shifted — my contribution changed or clarified what the invention was or would be',next:'CONTINUE_MAIN'},
+    {text:'It stayed the same — the team already knew what they were building, my contribution helped them get there',next:'STOP_G'},
+    {text:'I\'m not sure',next:'G_UNSURE'},
+  ]},
+  G_UNSURE:{progress:5,label:'Timing check',q:'After your contribution, did anyone need to go back and rethink or redesign the invention — or did the work shift to building, testing, and proving it?',sub:null,type:'options',options:[
+    {text:'Someone rethought or redesigned based on my contribution',next:'CONTINUE_MAIN'},
+    {text:'The work shifted to building and proving what was already conceived',next:'STOP_G'},
+    {text:'Still unclear — both happened to some degree',next:'FLAG_ATTORNEY'},
+  ]},
+  STOP_G:{type:'stop',title:'Timing — conception likely already complete',body:'Your contribution appears to have come after the inventive concept was already settled. Helping a team reach a goal they had already defined — even in an essential way — is generally not a contribution to conception.'},
+  FLAG_ATTORNEY:{type:'flag',title:'Timing is ambiguous — attorney review recommended',body:'The timing of your contribution relative to when conception was complete is genuinely unclear from your answers. This is too close to resolve through a self-administered interview. An attorney can assess the specific facts and determine whether your contribution falls within the conception period.'},
+  CONTINUE_MAIN:{type:'continue_main'},
+};
+
+function render(id) {
+  const s = screens[id];
+  if (!s) return;
+  current = id;
+  const area = document.getElementById('question-area');
+  const backBtn = document.getElementById('back-btn');
+  const progressBar = document.getElementById('progress-bar');
+  backBtn.style.display = history.length > 0 ? 'block' : 'none';
+
+  if (s.type === 'continue_main' || s.type === 'continue_rtp') {
+    conclusionIsRtp = s.type === 'continue_rtp';
+    document.getElementById('interview').style.display = 'none';
+    document.getElementById('conclusion').style.display = 'block';
+    showConclusion(1);
+    return;
+  }
+
+  if (s.progress !== undefined) {
+    let dots = '';
+    for (let i = 1; i <= TOTAL_DOTS; i++) {
+      const cls = i < s.progress ? 'done' : i === s.progress ? 'active' : '';
+      dots += `<div class="progress-dot ${cls}"></div>`;
+    }
+    progressBar.innerHTML = dots;
+  } else { progressBar.innerHTML = ''; }
+
+  if (s.type === 'options') {
+    const optHtml = s.options.map(o =>
+      `<button class="opt-btn" onclick="choose('${o.next}', this)">${o.text}</button>`
+    ).join('');
+    area.innerHTML = `
+      <div class="q-label">${s.label}</div>
+      <div class="q-text">${s.q}</div>
+      ${s.sub ? `<div class="q-sub">${s.sub}</div>` : ''}
+      ${optHtml}`;
+  } else if (s.type === 'stop') {
+    progressBar.innerHTML = '';
+    area.innerHTML = `
+      <div class="stop-card"><div class="stop-title">${s.title}</div><div class="stop-body">${s.body}</div></div>
+      <div class="nav-row">
+        ${history.length > 0 ? '<button class="action-btn" onclick="goBack()">← Back</button>' : ''}
+        <button class="action-btn" onclick="restartFull()">Start over</button>
+        <button class="action-btn print-btn" onclick="printSummary('${s.title}', '${s.body.replace(/'/g,"\\'").replace(/"/g,'&quot;')}', 'not-met')">Print summary</button>
+      </div>`;
+  } else if (s.type === 'flag') {
+    progressBar.innerHTML = '';
+    area.innerHTML = `
+      <div class="flag-card"><div class="flag-title">${s.title}</div><div class="flag-body">${s.body}</div></div>
+      <div class="nav-row">
+        ${history.length > 0 ? '<button class="action-btn" onclick="goBack()">← Back</button>' : ''}
+        <button class="action-btn" onclick="restartFull()">Start over</button>
+        <button class="action-btn print-btn" onclick="printSummary('${s.title}', '${s.body.replace(/'/g,"\\'").replace(/"/g,'&quot;')}', 'ambiguous')">Print summary</button>
+      </div>`;
+  }
+}
+
+function choose(next, btn) {
+  const answerText = btn ? btn.textContent.trim() : '';
+  logAnswer(current, answerText);
+  history.push(current);
+  render(next);
+}
+
+function goBack() {
+  if (history.length === 0) return;
+  current = history.pop();
+  render(current);
+}
+
+function goBackFromConclusion() {
+  document.getElementById('conclusion').style.display = 'none';
+  document.getElementById('interview').style.display = 'block';
+  render(current);
+}
+
+function showConclusion(step) {
+  const area = document.getElementById('conclusion-area');
+  const backBtn = document.getElementById('conclusion-back-btn');
+
+  if (step === 1) {
+    backBtn.style.display = 'block';
+    backBtn.onclick = () => goBackFromConclusion();
+    const rtpNote = conclusionIsRtp
+      ? ' Your contribution arose during the building or testing phase, but appears to have added to or changed what the invention actually is — a recognized but narrow path to inventorship.'
+      : '';
+    area.innerHTML = `
+      <div class="progress-label">Step 1 of 3</div>
+      <div class="continue-card">
+        <div class="continue-title">Conception threshold likely met</div>
+        <div class="continue-body">Based on your answers, your contribution appears to meet the threshold for conception — a specific, concrete idea independently originated and directed at the invention itself, made while conception was still in progress.${rtpNote}</div>
+      </div>
+      <div class="body-text">This is the most fundamental requirement for joint inventorship, and clearing it means you have a credible factual basis to explore a claim further.</div>
+      <div class="body-text-muted">What follows is not more analysis for you to work through — it is a summary of what still needs to be assessed, and what you can do now to be in the best position when you speak to an attorney.</div>
+      <div class="nav-row">
+        <button class="action-btn" onclick="goBackFromConclusion()">← Back</button>
+        <button class="action-btn primary" onclick="showConclusion(2)">Next ↗</button>
+      </div>`;
+  } else if (step === 2) {
+    backBtn.style.display = 'none';
+    area.innerHTML = `
+      <div class="progress-label">Step 2 of 3</div>
+      <div class="section-label">Evidence</div>
+      <div class="body-text">If a patent has already been granted or is pending, the law requires that a joint inventorship claim be supported by clear and convincing evidence — your own account of what you contributed is not sufficient on its own. This does not mean you need to have everything assembled before speaking to an attorney, but the following types of documents can significantly help clarify the strength and viability of your claim when you do.</div>
+      <div class="body-text-muted">Ideally each document shows two things: that your contribution happened during the relevant period, and that it connects you to the project. The closer in time these records are to when you made your contribution, the more useful they are likely to be.</div>
+      <div class="doc-item"><div class="doc-bullet"></div><div>Lab notebooks — dated entries are strongest, witnessed entries even better</div></div>
+      <div class="doc-item"><div class="doc-bullet"></div><div>Emails, Slack or Teams messages, or internal memos from the relevant period</div></div>
+      <div class="doc-item"><div class="doc-bullet"></div><div>Draft manuscripts, abstracts, or conference presentations that reference your contribution</div></div>
+      <div class="doc-item"><div class="doc-bullet"></div><div>Meeting notes or calendar records showing when and how you were involved</div></div>
+      <div class="doc-item"><div class="doc-bullet"></div><div>Draft patent disclosures or invention reports that identify contributors</div></div>
+      <div class="doc-item"><div class="doc-bullet"></div><div>Testimony from colleagues who directly witnessed your contribution — ideally supported by documentary evidence</div></div>
+      <div class="nav-row">
+        <button class="action-btn" onclick="showConclusion(1)">← Back</button>
+        <button class="action-btn primary" onclick="showConclusion(3)">Next ↗</button>
+      </div>`;
+  } else if (step === 3) {
+    backBtn.style.display = 'none';
+    area.innerHTML = `
+      <div class="progress-label">Step 3 of 3</div>
+      <div class="section-label">Full legal review</div>
+      <div class="body-text">This interview helped you work through some of the key factual questions around your contribution. A patent attorney can conduct a full review of your situation — including everything this interview covered and the factors it did not — and advise you on whether you have a viable claim, what steps are available to you, and what the process would look like.</div>
+      <div class="body-text-muted">Before that conversation, it helps to have the patent or application in hand if one exists. An attorney can locate it for you, but searching yourself beforehand means you arrive more prepared.</div>
+      <hr class="divider">
+      <div class="section-label">Finding the patent</div>
+      <div class="body-text-muted">Search by the inventors' names, your institution's name, or any keywords related to the invention.</div>
+      <div class="link-block"><div class="link-title">Granted patents</div><div class="link-url">patents.google.com</div></div>
+      <div class="link-block"><div class="link-title">Pending applications</div><div class="link-url">ppubs.uspto.gov</div></div>
+      <hr class="divider">
+      <div class="section-label">Seeking legal help</div>
+      <div class="body-text-muted">If you are at a university or research institution, your technology transfer office is often the right first contact — they can advise on your institution's IP policies, whether they have handled similar situations before, and whether they can refer you to outside counsel if needed.</div>
+      <div class="body-text-muted">If you are not affiliated with an institution, look for a patent attorney with experience in inventorship disputes or university IP. What you have worked through here gives you a solid starting point for that first conversation.</div>
+      <div class="tip-block">You do not need to have everything figured out before speaking to an attorney. The purpose of a first consultation is to assess whether a claim is worth pursuing — not to have already proven it.</div>
+      <div class="nav-row">
+        <button class="action-btn" onclick="showConclusion(2)">← Back</button>
+        <button class="action-btn print-btn" onclick="printSummary('Conception threshold likely met', '', 'met')">Print summary for attorney</button>
+        <button class="action-btn" onclick="restartFull()">Start over</button>
+      </div>`;
+  }
+}
+
+function printSummary(outcomeTitle, outcomeBody, outcomeType) {
+  const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const outcomeClass = outcomeType === 'met' ? 'met' : outcomeType === 'ambiguous' ? 'ambiguous' : 'not-met';
+  const rtpNote = conclusionIsRtp ? ' (building or testing route)' : '';
+
+  const evidenceItems = outcomeType === 'met' ? `
+    <div class="print-section">
+      <div class="print-section-title">Evidence to gather</div>
+      <div class="print-evidence-item">Lab notebooks — dated entries are strongest, witnessed entries even better</div>
+      <div class="print-evidence-item">Emails, Slack or Teams messages, or internal memos from the relevant period</div>
+      <div class="print-evidence-item">Draft manuscripts, abstracts, or conference presentations that reference your contribution</div>
+      <div class="print-evidence-item">Meeting notes or calendar records showing when and how you were involved</div>
+      <div class="print-evidence-item">Draft patent disclosures or invention reports that identify contributors</div>
+      <div class="print-evidence-item">Testimony from colleagues who directly witnessed your contribution</div>
+    </div>` : '';
+
+  const qaHtml = answerLog.map(entry => `
+    <div class="print-qa">
+      <div class="print-q">${entry.q}</div>
+      <div class="print-a">${entry.a}</div>
+    </div>`).join('');
+
+  document.getElementById('print-summary').innerHTML = `
+    <h1>Joint Inventorship Self-Assessment</h1>
+    <div class="print-subtitle">Completed ${date} — For attorney reference only</div>
+    <div class="print-outcome ${outcomeClass}">
+      <h2>${outcomeTitle}${outcomeType === 'met' ? rtpNote : ''}</h2>
+      ${outcomeType === 'met'
+        ? '<p>Based on the responses below, the contribution appears to meet the threshold for conception. This is a preliminary self-assessment only. A full legal review is required to evaluate the merits of any claim.</p>'
+        : outcomeType === 'ambiguous'
+        ? '<p>The timing of the contribution relative to when conception was complete is unclear. Attorney review is recommended to assess whether the contribution falls within the conception period.</p>'
+        : `<p>${outcomeBody}</p>`}
+    </div>
+    <div class="print-section">
+      <div class="print-section-title">Interview responses</div>
+      ${qaHtml || '<div class="print-qa"><div class="print-a">No responses recorded.</div></div>'}
+    </div>
+    ${evidenceItems}
+    <div class="print-disclaimer">
+      <strong>Disclaimer:</strong> This document is the output of a self-administered screening interview and does not constitute legal advice. It does not create an attorney-client relationship. The responses above are self-reported and have not been verified. Only a qualified patent attorney can assess the full merits of a joint inventorship claim. If the user is affiliated with a university or research institution, institutional IP policies may independently affect their rights.
+    </div>`;
+
+  window.print();
+}
+
+function restartFull() {
+  history.length = 0;
+  answerLog.length = 0;
+  current = 'A';
+  conclusionIsRtp = false;
+  document.getElementById('conclusion').style.display = 'none';
+  document.getElementById('interview').style.display = 'none';
+  document.getElementById('opening').style.display = 'block';
+  acknowledged = false;
+  document.getElementById('ack-box').classList.remove('checked');
+  const btn = document.getElementById('begin-btn');
+  btn.classList.remove('enabled');
+  btn.disabled = true;
+}
+</script>
+</body>
+</html>
